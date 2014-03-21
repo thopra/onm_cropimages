@@ -1,0 +1,72 @@
+
+<script src="{extPathPublic}/Contrib/Jcrop/js/jquery.Jcrop.min.js"></script>
+<script>
+
+$(window).load(function() {
+	var xsize = {processedFile.properties.width},
+		ysize = {processedFile.properties.height},
+		aspectRatio = xsize / ysize,
+		imageWidth = $('#target').width(),
+		imageHeight = $('#target').height(),
+		initX = 0,
+		initX2 = imageWidth,
+		initY = imageHeight /2 - ysize / 2,
+		initY2 = imageHeight /2 + ysize / 2;
+
+	//portrait
+	if (aspectRatio < 1) {
+		initX = imageWidth /2 - xsize / 2;
+		initX2 = imageWidth /2 + xsize / 2;
+		initY = 0;
+		initY2 = imageHeight;
+	}	
+
+	<f:if condition="{options}">
+		initX = {options.cropX};
+		initX2 = {options.cropX} + {options.cropWidth} ;
+		initY = {options.cropY};
+		initY2 = {options.cropY} + {options.cropHeight} ;
+	</f:if>
+
+	jQuery(function($){
+
+	    var jcrop_api;
+	    $('#target').Jcrop({
+	    	minSize: [xsize, ysize],
+	    	maxSize: [xsize, ysize],
+	    	aspectRatio: aspectRatio,
+	    	setSelect:  [initX, initY, initX2, initY2],
+		    onChange:   showCoords,
+		   	onSelect:   showCoords
+	    },function(){
+	      jcrop_api = this;
+	    });
+
+	});
+
+	// Simple event handler, called from onChange and onSelect
+	// event handlers, as per the Jcrop invocation above
+	function showCoords(c)
+	{
+		var	maxPercX = imageWidth-xsize,
+			maxPercY = imageHeight-ysize,
+			percentX =  parseInt((( c.x / maxPercX ) -0.5) * 100)*2 ,
+			percentY =  parseInt((( c.y / maxPercY ) -0.5) * 100)*2
+
+		if (c.x == 0 && c.x2 == imageWidth) {
+			percentX = 0;
+		}
+
+		if (c.y == 0 && c.y2 == imageHeight) {
+			percentY = 0;
+		}
+
+		$('#cropX').val(percentX);
+		$('#cropY').val(percentY);
+		$('#cropWidth').val( parseInt( c.w/xsize * 100 ) );
+		$('#cropHeight').val( parseInt( c.h/ysize * 100 ) );
+	};
+
+	$('#loader').fadeOut();
+});
+</script>

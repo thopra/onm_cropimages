@@ -1,0 +1,62 @@
+<f:layout name="backend" />
+<f:section name="content">
+
+<div id="typo3-docheader">
+	<div class="typo3-docheader-functions">
+		<div class="left"></div>
+		<div class="right">{file.name}</div>
+	</div>
+	<div class="typo3-docheader-buttons">
+
+	</div>
+</div>
+<div id="typo3-docbody">
+	<div id="typo3-inner-docbody no-padding">
+		<div id="image">
+		<div class="wrapper">
+		
+			<f:if condition="{aspectRatio} > {aspectRatioProcessed}">
+			<f:then>
+				<img src="../{file.storage.configuration.basePath}{file.identifier}" id="target" alt="" width="{processedFile.properties.width}"  />
+			</f:then>
+			<f:else>
+				<img src="../{file.storage.configuration.basePath}{file.identifier}" id="target" alt="" height="{processedFile.properties.height}"  />
+			</f:else>
+			</f:if>
+
+		</div>	
+		</div>
+
+		<f:form object="{options}" name="options" action="update" id="crop_form">
+
+		<f:form.hidden name="width" value="{processedFile.properties.width}" />
+		<f:form.hidden name="height" value="{processedFile.properties.height}" />
+		<f:form.hidden name="id" value="{id}" />
+
+		<f:form.submit value="save" class="btn" />
+
+			<div class="info">
+				<div class="col">
+					<label>W</label> <f:form.textfield property="width" value="{processedFile.properties.width}" readonly="true" /><br />
+					<label>H</label> <f:form.textfield property="height" value="{processedFile.properties.height}" readonly="true"  />
+				</div>
+				<div class="col">
+					<label>X</label> <f:form.textfield property="cropX" id="cropX" readonly="true"  /><br />
+					<label>Y</label> <f:form.textfield property="cropY" id="cropY" readonly="true"  />
+				</div>
+				<div class="col">
+					<label>% W</label> <f:form.textfield property="cropWidth" id="cropWidth" readonly="true"  /><br />
+					<label>% H</label> <f:form.textfield property="cropHeight" id="cropHeight" readonly="true"  />
+				</div>
+			</div>
+			
+		</f:form>
+
+	</div>
+
+	<div id="loader"></div>
+</div>
+
+<f:render partial="Options/Jcrop" arguments="{processedFile: processedFile, extPathPublic: extPathPublic, options: options}" />
+
+</f:section>

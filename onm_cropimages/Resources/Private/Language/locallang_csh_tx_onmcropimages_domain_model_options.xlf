@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2013-03-08T11:00:37Z" product-name="onm_cropimages">
+		<header/>
+		<body>
+
+			<trans-unit id="width.description">
+				<source>processed width</source>
+			</trans-unit>
+			<trans-unit id="height.description">
+				<source>processed height</source>
+			</trans-unit>
+			<trans-unit id="crop_x.description">
+				<source>top left x-axis coordinate (percentage)</source>
+			</trans-unit>
+			<trans-unit id="crop_y.description">
+				<source>top left y-axis coordinate (percentage)</source>
+			</trans-unit>
+			<trans-unit id="crop_width.description">
+				<source>width (percentage)</source>
+			</trans-unit>
+			<trans-unit id="crop_height.description">
+				<source>height (percentage)</source>
+			</trans-unit>
+			<trans-unit id="file.description">
+				<source>file</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

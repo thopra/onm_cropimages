@@ -1,0 +1,171 @@
+{namespace cropImages=ONM\OnmCropimages\ViewHelpers}
+
+<f:layout name="backend" />
+<f:section name="content">
+<div id="typo3-docheader">
+	<div class="typo3-docheader-functions">
+		<div class="left"></div>
+		<div class="right">{file.name}</div>
+	</div>
+	<div class="typo3-docheader-buttons">
+
+	</div>
+</div>
+<div id="typo3-docbody">
+	<div id="typo3-inner-docbody">
+		<f:if condition="{intro}">
+
+			<f:then>
+				
+				<div class="intro">
+				<f:translate key="intro" />
+				</div>
+
+			</f:then>
+
+			<f:else>
+
+				<div class="file-preview-detail">
+					
+					<f:image src="{cropImages:filePath(fileObject: '{file}')}" maxWidth="300" maxHeight="300" alt="" />
+
+				</div>
+
+				
+				<table cellspacing="0" cellpadding="0" id="typo3-filelist">
+					<thead>
+						<tr class="t3-row-header">
+							
+							<td nowrap="nowrap"><f:translate key="tx_onmcropimages_domain_model_options.file" /></td>
+							<td nowrap="nowrap"><f:translate key="tx_onmcropimages_domain_model_options.width" /></td>
+							<td nowrap="nowrap"><f:translate key="tx_onmcropimages_domain_model_options.height" /></td>
+							<td nowrap="nowrap"></td>
+							<td nowrap="nowrap"><f:translate key="edited" /></td>
+
+						</tr>
+					</thead>
+					<tbody>
+					<f:for each="{processedFiles}" as="processedFile">
+						<tr class="file_list_normal">
+		
+							<f:if condition="{processedFile.options}">
+								
+									<f:then>
+
+										<td width="200">
+											<f:image 
+												src="{cropImages:filePath(fileObject: '{file}')}" 
+												style="max-width: 200px; width: auto; height: auto; max-height: 100px"
+												width="{processedFile.options.tsValueWidth}" 
+												height="{processedFile.options.tsValueHeight}" 
+												alt="" />
+										</td>
+							
+										<td>
+											<f:link.action 
+												controller="Options" 
+												action="edit" 
+												class="edit filename" 
+												arguments="{
+													id: '{file.storage.storageRecord.uid}:{file.identifier}', 
+													height: '{processedFile.processed.properties.height}', 
+													width: '{processedFile.processed.properties.width}',
+													options: '{processedFile.options}'
+												}">
+											<strong>{processedFile.processed.properties.width}</strong>
+											<br />({processedFile.options.tsValueWidth})
+											</f:link.action>
+										</td>
+										<td>
+											<f:link.action 
+												controller="Options" 
+												action="edit" 
+												class="edit filename" 
+												arguments="{
+													id: '{file.storage.storageRecord.uid}:{file.identifier}', 
+													height: '{processedFile.processed.properties.height}', 
+													width: '{processedFile.processed.properties.width}',
+													options: '{processedFile.options}'
+												}">
+											<strong>{processedFile.processed.properties.height}</strong>
+											<br />({processedFile.options.tsValueHeight})
+											</f:link.action>
+										</td>
+										<td>
+											<f:link.action 
+												controller="Options" 
+												action="edit" 
+												class="edit btn" 
+												arguments="{
+													id: '{file.storage.storageRecord.uid}:{file.identifier}', 
+													height: '{processedFile.processed.properties.height}', 
+													width: '{processedFile.processed.properties.width}',
+													options: '{processedFile.options}'
+												}">
+												<f:translate key="edit_processed_file" />
+											</f:link.action>
+										</td>
+										<td><span class="edited"></span> </td>
+									</f:then>
+									<f:else>
+
+										<td width="200">
+											<f:image 
+												src="{cropImages:filePath(fileObject: '{processedFile.processed}')}" 
+												style="max-width: 200px; width: auto; height: auto; max-height: 100px"
+												alt="" />
+										</td>
+
+										<td>
+											<f:link.action 
+												controller="Options" 
+												action="new" 
+												class="new filename" 
+												arguments="{
+													id: '{file.storage.storageRecord.uid}:{file.identifier}', 
+													height: '{processedFile.processed.properties.height}', 
+													width: '{processedFile.processed.properties.width}'
+												}">
+											{processedFile.processed.properties.width} 
+											</f:link.action>
+										</td>
+										<td>
+											<f:link.action 
+												controller="Options" 
+												action="new" 
+												class="new filename" 
+												arguments="{
+													id: '{file.storage.storageRecord.uid}:{file.identifier}', 
+													height: '{processedFile.processed.properties.height}', 
+													width: '{processedFile.processed.properties.width}'
+												}">
+											{processedFile.processed.properties.height}
+											</f:link.action>
+										</td>
+										<td>
+											<f:link.action 
+												controller="Options" 
+												action="new" 
+												class="new btn" 
+												arguments="{
+													id: '{file.storage.storageRecord.uid}:{file.identifier}', 
+													height: '{processedFile.processed.properties.height}', 
+													width: '{processedFile.processed.properties.width}'
+												}">
+												<f:translate key="edit_processed_file" />
+											</f:link.action>
+										</td>
+										<td><span class="not-edited"></span></td>
+									</f:else>
+				
+							</f:if>
+							
+						</tr>
+					</f:for>
+					</tbody>
+				</table>
+			</f:else>
+		</f:if>
+	</div>
+</div>
+</f:section>

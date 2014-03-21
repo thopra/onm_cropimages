@@ -1,0 +1,104 @@
+{namespace cropImages=ONM\OnmCropimages\ViewHelpers}
+
+<f:layout name="backend" />
+<f:section name="content">
+<div id="typo3-docheader">
+	<div class="typo3-docheader-functions">
+		<div class="left"></div>
+		<div class="right">{folder.name} ({folder.identifier})</div>
+	</div>
+	<div class="typo3-docheader-buttons">
+
+	</div>
+</div>
+<div id="typo3-docbody">
+	<div id="typo3-inner-docbody">
+
+		<f:if condition="{intro}">
+
+			<f:then>
+				
+				<div class="intro">
+				<f:translate key="intro" />
+				</div>
+
+			</f:then>
+
+			<f:else>
+
+				<table cellspacing="0" cellpadding="0" id="typo3-filelist">
+					<thead>
+						<tr class="t3-row-header">
+							<td nowrap="nowrap" class="col-icon"></td>
+							<td nowrap="nowrap" width="100"></td>
+							<td nowrap="nowrap" class="">Filename</td>
+						</tr>
+					</thead>
+					<tbody>
+					<f:for each="{files}" as="file" key="index">
+					
+						<tr class="file_list_normal">
+							<td nowrap="nowrap" class="col-icon"></td>
+						
+							<td nowrap="nowrap">
+
+								<f:link.action action="list" additionalParams="{id: '{file.fileObject.storage.storageRecord.uid}:{file.fileObject.identifier}'}">
+									<f:image src="{cropImages:filePath(fileObject: '{file.fileObject}')}" maxWidth="100" alt="" />
+								</f:link.action>
+								
+							</td>
+							<td nowrap="nowrap" class="">
+								<f:link.action class="filename" action="list" additionalParams="{id: '{file.fileObject.storage.storageRecord.uid}:{file.fileObject.identifier}'}">{file.fileObject.name}</f:link.action>
+								<br />
+								
+								<f:for each="{file.processedFiles}" as="processedFile">
+									<f:if condition="{processedFile.options}">
+										<f:then>
+											<f:link.action 
+													controller="Options" 
+													action="edit" 
+													class="edit" 
+													additionalParams="{id: '{file.fileObject.storage.storageRecord.uid}:{file.fileObject.identifier}'}" 
+													arguments="{
+														height: '{processedFile.processed.properties.height}', 
+														width: '{processedFile.processed.properties.width}',
+														options: '{processedFile.options}'
+													}">
+												<span 
+													class="format-preview" 
+													style="width: {processedFile.previewWidth}px; height: {processedFile.previewHeight}px;" 
+													title="{processedFile.processed.properties.width} x {processedFile.processed.properties.height}">
+												</span>
+
+											</f:link.action>
+										</f:then>
+										<f:else>
+											<f:link.action 
+												controller="Options" 
+												action="new" 
+												class="new" 
+												additionalParams="{id: '{file.fileObject.storage.storageRecord.uid}:{file.fileObject.identifier}'}" 
+													arguments="{
+														height: '{processedFile.processed.properties.height}', 
+														width: '{processedFile.processed.properties.width}'
+													}">
+												<span 
+													class="format-preview" 
+													style="width: {processedFile.previewWidth}px; height: {processedFile.previewHeight}px;" 
+													title="{processedFile.processed.properties.width} x {processedFile.processed.properties.height}">
+												</span>
+
+											</f:link.action>
+										</f:else>
+									</f:if>
+								</f:for>
+							</td>
+						</tr>
+					</f:for>
+					</tbody>
+				</table>
+			</f:else>
+		</f:if>
+	</div>
+</div>
+</f:section>
