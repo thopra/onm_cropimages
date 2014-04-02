@@ -97,6 +97,7 @@ class ProcessedFileController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCo
 		$fileFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Resource\\ResourceFactory');
 
 		$file =  $fileFactory->retrieveFileOrFolderObject($this->id);
+		
 		if ($file instanceof \TYPO3\CMS\Core\Resource\Folder) {
 			$this->redirect('listFolder');
 		}
@@ -107,7 +108,7 @@ class ProcessedFileController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCo
 		}
 
 		$processedFiles = $this->getProcessedFilesForFile($file);
-
+ 
 		$this->view->assign('file', $file);
 		$this->view->assign('processedFiles', $processedFiles);
 	}

@@ -32,7 +32,7 @@
 				</div>
 
 				
-				<table cellspacing="0" cellpadding="0" id="typo3-filelist">
+				<table cellspacing="0" cellpadding="0" class="t3-table" id="typo3-filelist">
 					<thead>
 						<tr class="t3-row-header">
 							
@@ -110,8 +110,8 @@
 									<f:else>
 
 										<td width="200">
-											<f:image 
-												src="{cropImages:filePath(fileObject: '{processedFile.processed}')}" 
+											<img 
+												src="../{cropImages:filePath(fileObject: '{processedFile.processed}')}" 
 												style="max-width: 200px; width: auto; height: auto; max-height: 100px"
 												alt="" />
 										</td>
