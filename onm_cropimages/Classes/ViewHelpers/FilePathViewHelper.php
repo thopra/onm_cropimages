@@ -6,7 +6,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class FilePathViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
     /**
      *
-     * @param $fileObject
+     * @param mixed $fileObject
      * @return string 
      */
     public function render($fileObject) {
