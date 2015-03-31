@@ -75,7 +75,7 @@ class OptionsController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
 		$this->doc->backPath = $GLOBALS['BACK_PATH'];
 		$this->doc->addStyleSheet( 'jcrop', $this->extPathPublic.'/Contrib/Jcrop/css/jquery.Jcrop.min.css' );
 		$this->doc->loadJavascriptLib( 'contrib/jquery/jquery-1.8.2.min.js' );
-		$this->view->assign( 'docPageStart', $this->doc->startPage() );
+		$this->view->assign( 'docPageStart', $this->doc->startPage('Crop Images') );
 
 		if (GeneralUtility::_GP('id')) {
 			$this->request->setArgument('id', GeneralUtility::_GP('id'));

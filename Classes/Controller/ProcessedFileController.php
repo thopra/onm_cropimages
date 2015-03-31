@@ -66,7 +66,7 @@ class ProcessedFileController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCo
 	{
 		$this->doc = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Backend\\Template\\DocumentTemplate');
 		$this->doc->backPath = $GLOBALS['BACK_PATH'];
-		$this->view->assign( 'docPageStart', $this->doc->startPage() );
+		$this->view->assign( 'docPageStart', $this->doc->startPage('Crop Images') );
 
 		if (GeneralUtility::_GP('id')) {
 			$this->request->setArgument('id', GeneralUtility::_GP('id'));
@@ -164,7 +164,10 @@ class ProcessedFileController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCo
 					
 				$properties = $processedFile->getProperties();
 				$arKey = (int)$properties['width'].'-'.(int)$properties['height'];
-
+				
+				if ((int)$properties['height'] == 0) {
+				continue;
+				}
 				$ratio = round( ((int)$properties['width'] / (int)$properties['height']), 2);
 				$orgRatio = round( ($file->getProperty('width') / $file->getProperty('height')), 2);
 
