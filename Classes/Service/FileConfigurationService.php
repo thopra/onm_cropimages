@@ -52,39 +52,41 @@ class FileConfigurationService {
      */
     protected $optionsRepository;
 
-	/**
-	 * Slot for the postFileProcess signal
+    /**
+     * Slot for the postFileProcess signal
      *
      * This method overwrites the image, wich has originally been processed by template-based TS input
      * with a new one that is created by the TS configuration created by the user input within the backend module
-	 * 
-	 * @param $FileProcessingService Class containing the signal
-	 * @param $driver 
-	 * @param $processedFile
-	 * @param $file
-	 * @param $context
-	 * @param $configuration
-	 */
+     * 
+     * @param $FileProcessingService Class containing the signal
+     * @param $driver 
+     * @param $processedFile
+     * @param $file
+     * @param $context
+     * @param $configuration
+     */
     public function postFileProcess($fileProcessingService, $driver, $processedFile, $file, $context, $configuration)
     {
-    	if ($context != \TYPO3\CMS\Core\Resource\ProcessedFile::CONTEXT_IMAGECROPSCALEMASK)  {
-    		return;
-    	}
+        if ($context != \TYPO3\CMS\Core\Resource\ProcessedFile::CONTEXT_IMAGECROPSCALEMASK)  {
+            return;
+        }
 
         if ($processedFile->getIdentifier() === NULL) {
             return;
         }
 
-    	$fileProperties = $file->getProperties();
-    	$storageConfig = $file->getStorage()->getConfiguration();
+        $fileProperties = $file->getProperties();
+        $storageConfig = $file->getStorage()->getConfiguration();
 
-    	$newConfiguration = $this->getConfigurationForFile($processedFile, $configuration);
+        $configuration = $this->getRealConfiguration($processedFile, $configuration);
+
+        $newConfiguration = $this->getConfigurationForFile($processedFile, $configuration);
 
         if ($configuration == $newConfiguration) {
             return;
         }
 
-		$newProcessedFileObject = $file->process(\TYPO3\CMS\Core\Resource\ProcessedFile::CONTEXT_IMAGECROPSCALEMASK, $newConfiguration);
+        $newProcessedFileObject = $file->process(\TYPO3\CMS\Core\Resource\ProcessedFile::CONTEXT_IMAGECROPSCALEMASK, $newConfiguration);
         $filePath = GeneralUtility::dirname(PATH_site);
         if ($storageConfig['basePath']) {
             $filePath .= '/'.GeneralUtility::dirname($storageConfig['basePath']);
@@ -166,8 +168,8 @@ class FileConfigurationService {
      */
     public function getConfigurationForFile($processedFileObj, $defaultConfig = array())
     {
-    	$config = $this->getOptionsForFileAndConfig($processedFileObj->getOriginalFile()->getUid(), $defaultConfig);
-    	return array_merge($defaultConfig, $config);
+        $config = $this->getOptionsForFileAndConfig($processedFileObj->getOriginalFile()->getUid(), $defaultConfig);
+        return array_merge($defaultConfig, $config);
     }
 
     /**
@@ -203,6 +205,56 @@ class FileConfigurationService {
         }
 
         return $config;
+    }
+
+    /**
+     * Checks if the given configuration is valid for the processed file.
+     * If the processed file does not fit the boundaries of the given configuration, 
+     * the configuration is updated to match the real width and height of the file.
+     * This is crucial, because the configuration in the backend module is based on the rendered file, 
+     * not the TS Config that led to this file being generated.
+     *
+     * @param TYPO3\CMS\Core\Resource\ProcessedFile $processedFileObj 
+     * @param array $configuration array
+     * @return array
+     */
+    protected function getRealConfiguration($processedFile, $configuration)
+    {
+        
+
+        $storageConfig = $processedFile->getStorage()->getConfiguration();
+        $filePath = GeneralUtility::dirname(PATH_site);
+        if ($storageConfig['basePath']) {
+            $filePath .= '/'.GeneralUtility::dirname($storageConfig['basePath']);
+        }
+
+        // if images are scaled up, we dont have to do anything
+        if ( (int)$GLOBALS['TYPO3_CONF_VARS']['GFX']['im_noScaleUp'] != 1 || !file_exists($filePath . $processedFile->getIdentifier()) ) {
+            return $configuration;
+        }
+
+        list($width, $height) = getimagesize( $filePath . $processedFile->getIdentifier() );/*
+
+        if($_GET['debug']) { 
+            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump( substr($configuration['width'], strpos((int)$configuration['width'], $configuration['width']) + strlen(((int)$configuration['width'])-1) ) );
+            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump( strlen(((int)$configuration['width'])-1) );
+            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump( $configuration );
+        }*/
+
+        if ($configuration['width'] && $width < (int)$configuration['width']) {
+            $configuration['width'] = $width . substr($configuration['width'], strpos((int)$configuration['width'], $configuration['width']) + strlen(((int)$configuration['width'])-1) );
+        }
+
+        if ($configuration['height'] && $height < (int)$configuration['height']) {
+            $configuration['height'] = $height . substr($configuration['height'], strpos((int)$configuration['height'], $configuration['height']) + strlen(((int)$configuration['height'])-1) );
+        }
+
+        /*if($_GET['debug']) { 
+            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump( $configuration );
+            exit; 
+        }*/
+
+        return $configuration;
     }
     
 }
