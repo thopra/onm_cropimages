@@ -24,9 +24,10 @@
 			</f:then>
 
 			<f:else>
+				<f:if condition="{cropImages:filePath(fileObject: '{file}')}">
 
 				<div class="file-preview-detail">
-					
+
 					<f:image src="{cropImages:filePath(fileObject: '{file}')}" maxWidth="300" maxHeight="300" alt="" />
 
 				</div>
@@ -164,6 +165,7 @@
 					</f:for>
 					</tbody>
 				</table>
+				</f:if>
 			</f:else>
 		</f:if>
 	</div>

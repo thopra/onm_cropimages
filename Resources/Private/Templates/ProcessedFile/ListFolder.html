@@ -36,6 +36,8 @@
 					</thead>
 					<tbody>
 					<f:for each="{files}" as="file" key="index">
+
+						<f:if condition="{cropImages:filePath(fileObject: '{file.fileObject}')}">
 					
 						<tr class="file_list_normal">
 							<td nowrap="nowrap" class="col-icon"></td>
@@ -94,6 +96,7 @@
 								</f:for>
 							</td>
 						</tr>
+						</f:if>
 					</f:for>
 					</tbody>
 				</table>

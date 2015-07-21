@@ -52,41 +52,41 @@ class FileConfigurationService {
      */
     protected $optionsRepository;
 
-    /**
-     * Slot for the postFileProcess signal
+	/**
+	 * Slot for the postFileProcess signal
      *
      * This method overwrites the image, wich has originally been processed by template-based TS input
      * with a new one that is created by the TS configuration created by the user input within the backend module
-     * 
-     * @param $FileProcessingService Class containing the signal
-     * @param $driver 
-     * @param $processedFile
-     * @param $file
-     * @param $context
-     * @param $configuration
-     */
+	 * 
+	 * @param $FileProcessingService Class containing the signal
+	 * @param $driver 
+	 * @param $processedFile
+	 * @param $file
+	 * @param $context
+	 * @param $configuration
+	 */
     public function postFileProcess($fileProcessingService, $driver, $processedFile, $file, $context, $configuration)
     {
-        if ($context != \TYPO3\CMS\Core\Resource\ProcessedFile::CONTEXT_IMAGECROPSCALEMASK)  {
-            return;
-        }
+    	if ($context != \TYPO3\CMS\Core\Resource\ProcessedFile::CONTEXT_IMAGECROPSCALEMASK)  {
+    		return;
+    	}
 
         if ($processedFile->getIdentifier() === NULL) {
             return;
         }
 
-        $fileProperties = $file->getProperties();
-        $storageConfig = $file->getStorage()->getConfiguration();
+    	$fileProperties = $file->getProperties();
+    	$storageConfig = $file->getStorage()->getConfiguration();
 
         $configuration = $this->getRealConfiguration($processedFile, $configuration);
 
-        $newConfiguration = $this->getConfigurationForFile($processedFile, $configuration);
+    	$newConfiguration = $this->getConfigurationForFile($processedFile, $configuration);
 
         if ($configuration == $newConfiguration) {
             return;
         }
 
-        $newProcessedFileObject = $file->process(\TYPO3\CMS\Core\Resource\ProcessedFile::CONTEXT_IMAGECROPSCALEMASK, $newConfiguration);
+		$newProcessedFileObject = $file->process(\TYPO3\CMS\Core\Resource\ProcessedFile::CONTEXT_IMAGECROPSCALEMASK, $newConfiguration);
         $filePath = GeneralUtility::dirname(PATH_site);
         if ($storageConfig['basePath']) {
             $filePath .= '/'.GeneralUtility::dirname($storageConfig['basePath']);
@@ -168,8 +168,8 @@ class FileConfigurationService {
      */
     public function getConfigurationForFile($processedFileObj, $defaultConfig = array())
     {
-        $config = $this->getOptionsForFileAndConfig($processedFileObj->getOriginalFile()->getUid(), $defaultConfig);
-        return array_merge($defaultConfig, $config);
+    	$config = $this->getOptionsForFileAndConfig($processedFileObj->getOriginalFile()->getUid(), $defaultConfig);
+    	return array_merge($defaultConfig, $config);
     }
 
     /**

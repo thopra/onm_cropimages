@@ -10,10 +10,10 @@ class FilePathViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHe
      * @return string 
      */
     public function render($fileObject) {
-       
-        $storageConf = $fileObject->getStorage()->getConfiguration();
-        $baseDir = GeneralUtility::dirname($storageConf['basePath']);
+        if (file_exists(PATH_site.$fileObject->getPublicUrl())) {
+            return $fileObject->getPublicUrl();
+        }
 
-        return $baseDir.$fileObject->getIdentifier();
+        return false;
     }
 }
